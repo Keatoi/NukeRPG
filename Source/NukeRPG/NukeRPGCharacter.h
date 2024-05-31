@@ -15,7 +15,25 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
+USTRUCT(BlueprintType)
+struct FAmmoTypes
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int RifleAmmo = 0;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int ShotgunAmmo = 0;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int HandgunAmmo = 0;//Pistols/SMG
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int HeavyAmmo = 0; //Sniper/Machine Gun
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int RocketAmmo = 0;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int FragGrenades = 0;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
+	int FlashGrenades = 0;
+};
 UCLASS(config=Game)
 class ANukeRPGCharacter : public ACharacter
 {
