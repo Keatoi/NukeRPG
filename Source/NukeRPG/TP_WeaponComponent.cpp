@@ -12,6 +12,7 @@
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
+//use this class mainly for testing new gun functionailty
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -23,7 +24,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 
 void UTP_WeaponComponent::Fire()
 {
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr || Character->GetController() == nullptr || Mag <= 0)
 	{
 		return;
 	}
@@ -45,6 +46,8 @@ void UTP_WeaponComponent::Fire()
 	
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<ANukeRPGProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			//remove projectile from magazine
+			Mag--;
 		}
 	}
 	
@@ -64,6 +67,35 @@ void UTP_WeaponComponent::Fire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+void UTP_WeaponComponent::StartReload()
+{
+	//prevent reloading on a full magazine
+	if(Mag == MagCap || Character == nullptr)
+	{
+		return;
+	}
+	bCanFire = false;
+	//GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &UTP_WeaponComponent::CompleteReload, ReloadTime, false); 
+}
+
+void UTP_WeaponComponent::CompleteReload()
+{
+	int MagRemainder = MagCap - Mag;
+	int MagToRemove = MagCap - MagRemainder;
+	int Reserve = Character->AmmoInv.RifleAmmo;
+	if(Reserve > MagCap)
+	{
+		Mag = MagCap;
+		Character->AmmoInv.RifleAmmo -= MagToRemove;
+	}
+	else
+	{
+		Mag = Reserve;
+		Character->AmmoInv.RifleAmmo = 0;
+	}
+	bCanFire = true;
 }
 
 bool UTP_WeaponComponent::AttachWeapon(ANukeRPGCharacter* TargetCharacter)

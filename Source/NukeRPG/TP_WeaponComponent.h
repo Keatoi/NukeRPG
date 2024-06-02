@@ -30,6 +30,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector MuzzleOffset;
 
+	/*Maximum amount of Ammo this gun can hold in a single magazine*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	int MagCap;
+	/*Current amount of projectiles in the weapons magazine*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	int Mag;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	bool bCanFire;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	float ReloadTime;
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputMappingContext* FireMappingContext;
@@ -37,6 +48,8 @@ public:
 	/** Fire Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
 
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
@@ -48,13 +61,18 @@ public:
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void StartReload();
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void CompleteReload();
 
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
+	
 private:
 	/** The Character holding this weapon*/
 	ANukeRPGCharacter* Character;
+	FTimerHandle* ReloadTimer;
 };

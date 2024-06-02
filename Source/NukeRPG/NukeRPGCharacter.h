@@ -57,7 +57,8 @@ class ANukeRPGCharacter : public ACharacter
 	
 public:
 	ANukeRPGCharacter();
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FAmmoTypes AmmoInv;
 protected:
 	virtual void BeginPlay();
 
