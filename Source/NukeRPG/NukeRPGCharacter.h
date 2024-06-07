@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "NukeRPGCharacter.generated.h"
@@ -34,6 +35,22 @@ struct FAmmoTypes
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Ammo Types")
 	int FlashGrenades = 0;
 };
+USTRUCT(BlueprintType)
+struct FVitals
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float Health;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float Stamina;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float Rads;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float DmgResist;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float RadResist;
+	
+};
 UCLASS(config=Game)
 class ANukeRPGCharacter : public ACharacter
 {
@@ -54,6 +71,10 @@ class ANukeRPGCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	/** Crouch Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* CrouchAction;
 	
 public:
 	ANukeRPGCharacter();
@@ -74,6 +95,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	/**Toggle Crouch**/
+	void CrouchToggle(const FInputActionValue& Value);
 
 protected:
 	// APawn interface

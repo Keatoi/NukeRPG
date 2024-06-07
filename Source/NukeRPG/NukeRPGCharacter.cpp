@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -42,6 +43,11 @@ void ANukeRPGCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+	// enable crouching
+	if (GetMovementComponent())
+	{
+		GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -60,6 +66,9 @@ void ANukeRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ANukeRPGCharacter::Look);
+
+		//Crouch Toggle
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ANukeRPGCharacter::CrouchToggle);
 	}
 	else
 	{
@@ -91,5 +100,19 @@ void ANukeRPGCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ANukeRPGCharacter::CrouchToggle(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp,Warning,TEXT("Crouching called"));
+	if(!GetMovementComponent()->IsCrouching())
+	{
+		
+		Crouch();
+	}
+	else
+	{
+		UnCrouch();
 	}
 }
