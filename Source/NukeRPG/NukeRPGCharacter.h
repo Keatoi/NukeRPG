@@ -45,10 +45,18 @@ struct FVitals
 	float Stamina;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
 	float Rads;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Modifier")
 	float DmgResist;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Modifier")
 	float RadResist;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float BaseWalkSpeed = 500.f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
+	float BaseSprintSpeed = 750.f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Modifier")
+	float WalkSpeedMod = 1.f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Modifier")
+	float SprintSpeedMod = 1.f;
 	
 };
 UCLASS(config=Game)
@@ -75,11 +83,17 @@ class ANukeRPGCharacter : public ACharacter
 	/** Crouch Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* CrouchAction;
+
+	/**Sprint Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* SprintAction;
 	
 public:
 	ANukeRPGCharacter();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FAmmoTypes AmmoInv;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVitals PlayerVitals;
 protected:
 	virtual void BeginPlay();
 
@@ -97,6 +111,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 	/**Toggle Crouch**/
 	void CrouchToggle(const FInputActionValue& Value);
+
+	/**Sprinting**/
+	void OnStartSprint();
+	void OnStopSprint();
 
 protected:
 	// APawn interface

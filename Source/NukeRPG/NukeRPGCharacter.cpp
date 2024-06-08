@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -47,6 +48,8 @@ void ANukeRPGCharacter::BeginPlay()
 	if (GetMovementComponent())
 	{
 		GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+		GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod);
+		GetCharacterMovement()->MaxWalkSpeedCrouched = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod) / 2.f;
 	}
 }
 
@@ -69,6 +72,10 @@ void ANukeRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 		//Crouch Toggle
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ANukeRPGCharacter::CrouchToggle);
+
+		//Sprinting
+		EnhancedInputComponent->BindAction(SprintAction,ETriggerEvent::Started,this,&ANukeRPGCharacter::OnStartSprint);
+		EnhancedInputComponent->BindAction(SprintAction,ETriggerEvent::Completed,this,&ANukeRPGCharacter::OnStopSprint);
 	}
 	else
 	{
@@ -115,4 +122,15 @@ void ANukeRPGCharacter::CrouchToggle(const FInputActionValue& Value)
 	{
 		UnCrouch();
 	}
+}
+
+void ANukeRPGCharacter::OnStartSprint()
+{
+	if(GetMovementComponent()->IsCrouching()) UnCrouch();
+	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseSprintSpeed * PlayerVitals.SprintSpeedMod);
+}
+
+void ANukeRPGCharacter::OnStopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod);
 }
