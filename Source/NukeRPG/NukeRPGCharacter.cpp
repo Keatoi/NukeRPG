@@ -110,7 +110,7 @@ void ANukeRPGCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void ANukeRPGCharacter::CrouchToggle(const FInputActionValue& Value)
+auto ANukeRPGCharacter::CrouchToggle(const FInputActionValue& Value) -> void
 {
 	UE_LOG(LogTemp,Warning,TEXT("Crouching called"));
 	if(!GetMovementComponent()->IsCrouching())
@@ -134,3 +134,61 @@ void ANukeRPGCharacter::OnStopSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod);
 }
+
+void ANukeRPGCharacter::DecrementStamina()
+{
+	PlayerVitals.Stamina--;
+}
+
+void ANukeRPGCharacter::IncrementStamina()
+{
+	PlayerVitals.Stamina++;
+}
+
+void ANukeRPGCharacter::IncreaseStamina(float IncreasePercent)
+{
+	//BP Helper Function, assumes that percentage is inputted as a whole number so 50% would be 50.f not 0.5
+	float Percent = IncreasePercent / 100.f;
+	float StamIncrease = Percent * PlayerVitals.Stamina;
+	float NewStam = PlayerVitals.Stamina + StamIncrease;
+	
+	PlayerVitals.Stamina = FMath::Clamp(NewStam,0.f,100.f);
+}
+
+void ANukeRPGCharacter::DecreaseStamina(float DecreasePercent)
+{
+	//BP Helper Function, assumes that percentage is inputted as a whole number so 50% would be 50.f not 0.5
+	float Percent = DecreasePercent / 100.f;
+	float StamDecrease = Percent * PlayerVitals.Stamina;
+	float NewStam = PlayerVitals.Stamina - StamDecrease;
+	PlayerVitals.Stamina = FMath::Clamp(NewStam,0.f,100.f);
+}
+
+void ANukeRPGCharacter::DecrementHP()
+{
+	PlayerVitals.Health--;
+}
+
+void ANukeRPGCharacter::IncrementHP()
+{
+	PlayerVitals.Health++;
+}
+
+void ANukeRPGCharacter::IncreaseHP(float IncreasePercent)
+{
+	float Percent = IncreasePercent / 100.f;
+	float HPIncrease = Percent * PlayerVitals.Health;
+	float NewHP = PlayerVitals.Health + HPIncrease;
+	
+	PlayerVitals.Health = FMath::Clamp(NewHP,0.f,100.f);
+}
+
+void ANukeRPGCharacter::DecreaseHP(float DecreasePercent)
+{
+	float Percent = DecreasePercent / 100.f;
+	float HPDecrease = Percent * PlayerVitals.Health;
+	float NewHP = PlayerVitals.Health - HPDecrease;
+	
+	PlayerVitals.Health = FMath::Clamp(NewHP,0.f,100.f);
+}
+

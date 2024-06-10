@@ -115,6 +115,16 @@ protected:
 	/**Sprinting**/
 	void OnStartSprint();
 	void OnStopSprint();
+	/**Stamina Functions**/
+	void DecrementStamina();
+	void IncrementStamina();
+	void IncreaseStamina(float IncreasePercent);
+	void DecreaseStamina(float DecreasePercent);
+	/**HP Functions**/
+	void DecrementHP();
+	void IncrementHP();
+	void IncreaseHP(float IncreasePercent);
+	void DecreaseHP(float DecreasePercent);
 
 protected:
 	// APawn interface
@@ -128,4 +138,5 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 };
+
 
