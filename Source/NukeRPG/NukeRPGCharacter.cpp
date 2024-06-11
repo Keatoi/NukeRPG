@@ -74,7 +74,7 @@ void ANukeRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ANukeRPGCharacter::CrouchToggle);
 
 		//Sprinting
-		EnhancedInputComponent->BindAction(SprintAction,ETriggerEvent::Started,this,&ANukeRPGCharacter::OnStartSprint);
+		EnhancedInputComponent->BindAction(SprintAction,ETriggerEvent::Triggered,this,&ANukeRPGCharacter::OnStartSprint);
 		EnhancedInputComponent->BindAction(SprintAction,ETriggerEvent::Completed,this,&ANukeRPGCharacter::OnStopSprint);
 	}
 	else
@@ -126,12 +126,14 @@ auto ANukeRPGCharacter::CrouchToggle(const FInputActionValue& Value) -> void
 
 void ANukeRPGCharacter::OnStartSprint()
 {
+	UE_LOG(LogTemp,Warning,TEXT("Sprint called"));
 	if(GetMovementComponent()->IsCrouching()) UnCrouch();
 	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseSprintSpeed * PlayerVitals.SprintSpeedMod);
 }
 
 void ANukeRPGCharacter::OnStopSprint()
 {
+	UE_LOG(LogTemp,Warning,TEXT("StopSprint called"));
 	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod);
 }
 
