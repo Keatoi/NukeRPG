@@ -128,13 +128,22 @@ void ANukeRPGCharacter::OnStartSprint()
 {
 	UE_LOG(LogTemp,Warning,TEXT("Sprint called"));
 	if(GetMovementComponent()->IsCrouching()) UnCrouch();
-	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseSprintSpeed * PlayerVitals.SprintSpeedMod);
+	if(PlayerVitals.Stamina >= 10.f)
+	{
+		//Only start sprint if above min threshold
+		GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseSprintSpeed * PlayerVitals.SprintSpeedMod);
+		DegenStamina();
+		UE_LOG(LogTemp,Warning,TEXT("Stamina %f"),PlayerVitals.Stamina);
+	}
+	
 }
 
 void ANukeRPGCharacter::OnStopSprint()
 {
 	UE_LOG(LogTemp,Warning,TEXT("StopSprint called"));
 	GetCharacterMovement()->MaxWalkSpeed = (PlayerVitals.BaseWalkSpeed * PlayerVitals.WalkSpeedMod);
+	RegenStamina();
+	UE_LOG(LogTemp,Warning,TEXT("Stamina %f"),PlayerVitals.Stamina);
 }
 
 void ANukeRPGCharacter::DecrementStamina()
@@ -164,6 +173,25 @@ void ANukeRPGCharacter::DecreaseStamina(float DecreasePercent)
 	float StamDecrease = Percent * PlayerVitals.Stamina;
 	float NewStam = PlayerVitals.Stamina - StamDecrease;
 	PlayerVitals.Stamina = FMath::Clamp(NewStam,0.f,100.f);
+}
+//Decrement and increment functions but recursive
+void ANukeRPGCharacter::DegenStamina()
+{
+	if( PlayerVitals.Stamina > 1.f)
+	{
+		PlayerVitals.Stamina--;
+		DegenStamina();
+	}
+	
+}
+
+void ANukeRPGCharacter::RegenStamina()
+{
+	if(PlayerVitals.Stamina <= 100.f)
+	{
+		PlayerVitals.Stamina++;
+		RegenStamina();
+	}
 }
 
 void ANukeRPGCharacter::DecrementHP()

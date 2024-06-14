@@ -40,9 +40,9 @@ struct FVitals
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
-	float Health;
+	float Health = 100.f;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
-	float Stamina;
+	float Stamina = 100.f;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Vitals")
 	float Rads;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Modifier")
@@ -120,6 +120,8 @@ protected:
 	void IncrementStamina();
 	void IncreaseStamina(float IncreasePercent);
 	void DecreaseStamina(float DecreasePercent);
+	void DegenStamina();
+	void RegenStamina();
 	/**HP Functions**/
 	void DecrementHP();
 	void IncrementHP();
