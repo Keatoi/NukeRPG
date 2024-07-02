@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Animation/AnimInstance.h"
+#include "Camera/CameraComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
 //use this class mainly for testing new gun functionailty
@@ -98,6 +99,21 @@ void UTP_WeaponComponent::CompleteReload()
 	bCanFire = true;
 }
 
+void UTP_WeaponComponent::StartADS()
+{
+	if(Character)
+	{
+		//TODO: replace with a lerp timeline?
+		CamStart = Character->GetFirstPersonCameraComponent()->GetComponentLocation();
+		Character->GetFirstPersonCameraComponent()->SetWorldLocation(FMath::Lerp(CamStart,GetSocketLocation("SightSocket"),UGameplayStatics::GetWorldDeltaSeconds(this)));
+	}
+}
+
+void UTP_WeaponComponent::CompleteADS()
+{
+	Character->GetFirstPersonCameraComponent()->SetWorldLocation(FMath::Lerp(GetSocketLocation("SightSocket"),CamStart,UGameplayStatics::GetWorldDeltaSeconds(this)));
+}
+
 bool UTP_WeaponComponent::AttachWeapon(ANukeRPGCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
@@ -128,6 +144,9 @@ bool UTP_WeaponComponent::AttachWeapon(ANukeRPGCharacter* TargetCharacter)
 		{
 			// Fire
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			//ADS
+			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::StartReload);
+			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::CompleteReload);
 		}
 	}
 

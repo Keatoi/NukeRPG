@@ -50,6 +50,8 @@ public:
 	class UInputAction* FireAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ReloadAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ADSAction;
 
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
@@ -65,6 +67,10 @@ public:
 	void StartReload();
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void CompleteReload();
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void StartADS();
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void CompleteADS();
 
 protected:
 	/** Ends gameplay for this component. */
@@ -74,5 +80,6 @@ protected:
 private:
 	/** The Character holding this weapon*/
 	ANukeRPGCharacter* Character;
+	FVector CamStart;
 	FTimerHandle* ReloadTimer;
 };
